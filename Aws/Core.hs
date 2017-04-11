@@ -141,6 +141,7 @@ import qualified Text.XML                 as XML
 import qualified Text.XML.Cursor          as Cu
 import           Text.XML.Cursor          hiding (force, forceM)
 import           Prelude
+import           Debug.Trace
 -------------------------------------------------------------------------------
 
 -- | Types that can be logged (textually).
@@ -866,7 +867,8 @@ xmlCursorConsumer ::
     -> HTTPResponseConsumer a
 xmlCursorConsumer parse metadataRef res
     = do doc <- HTTP.responseBody res $$+- XML.sinkDoc XML.def
-         let cursor = Cu.fromDocument doc
+         
+         let cursor = trace ("JDAWS: Here is the doc: " ++ show doc) Cu.fromDocument doc
          let Response metadata x = parse cursor
          liftIO $ tellMetadataRef metadataRef metadata
          case x of
