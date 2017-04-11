@@ -488,7 +488,7 @@ readUserMessageAttributeValue
     :: Cu.Cursor
     -> Response SqsMetadata UserMessageAttributeValue
 readUserMessageAttributeValue cursor = do
-    typStr <- force "Missing DataType"
+    typStr <- traceStack "JDaws" $ force "Missing DataType"
         $ cursor $/ Cu.laxElement "DataType" &/ Cu.content
     case parseType typStr of
         ("String", c) -> do
