@@ -40,6 +40,7 @@ import qualified Network.HTTP.Types as HTTP
 import Text.Read (readEither)
 import qualified Text.XML.Cursor as Cu
 import Prelude
+import Debug.Trace
 
 -- -------------------------------------------------------------------------- --
 -- User Message Attributes
@@ -479,7 +480,7 @@ readMessageAttribute cursor = do
 readUserMessageAttribute
     :: Cu.Cursor
     -> Response SqsMetadata UserMessageAttribute
-readUserMessageAttribute cursor = (,)
+readUserMessageAttribute cursor = traceStack "We are here JDAWS" (,)
     <$> force "Missing Name" (cursor $/ Cu.laxElement "Name" &/ Cu.content)
     <*> readUserMessageAttributeValue cursor
 
