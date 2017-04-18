@@ -489,7 +489,7 @@ readUserMessageAttributeValue
     -> Response SqsMetadata UserMessageAttributeValue
 readUserMessageAttributeValue cursor = do
     typStr <- trace ("JDaws: "++ show cursor) $ force "Missing DataType"
-        $ cursor $/ Cu.laxElement "DataType" &/ Cu.content
+        $ cursor $// Cu.laxElement "DataType" &/ Cu.content
     case parseType typStr of
         ("String", c) -> do
             val <- force "Missing StringValue"
