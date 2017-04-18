@@ -480,7 +480,7 @@ readMessageAttribute cursor = do
 readUserMessageAttribute
     :: Cu.Cursor
     -> Response SqsMetadata UserMessageAttribute
-readUserMessageAttribute cursor = traceStack "We are here JDAWS" (,)
+readUserMessageAttribute cursor = (,)
     <$> force "Missing Name" (cursor $/ Cu.laxElement "Name" &/ Cu.content)
     <*> readUserMessageAttributeValue cursor
 
@@ -488,23 +488,23 @@ readUserMessageAttributeValue
     :: Cu.Cursor
     -> Response SqsMetadata UserMessageAttributeValue
 readUserMessageAttributeValue cursor = do
-    typStr <- trace ("JDaws: "++ show cursor) $ force "Missing DataType"
+    typStr <- force "Missing DataType"
         $ cursor $// Cu.laxElement "DataType" &/ Cu.content
     case parseType typStr of
         ("String", c) -> do
             val <- force "Missing StringValue"
-                $ cursor $/ Cu.laxElement "StringValue" &/ Cu.content
+                $ cursor $// Cu.laxElement "StringValue" &/ Cu.content
             return $ UserMessageAttributeString c val
 
         ("Number", c) -> do
             valStr <- force "Missing StringValue"
-                $ cursor $/ Cu.laxElement "StringValue" &/ Cu.content
+                $ cursor $// Cu.laxElement "StringValue" &/ Cu.content
             val <- tryXml . readEither $ T.unpack valStr
             return $ UserMessageAttributeNumber c val
 
         ("Binary", c) -> do
             val64 <- force "Missing StringValue"
-                $ cursor $/ Cu.laxElement "StringValue" &/ Cu.content
+                $ cursor $// Cu.laxElement "StringValue" &/ Cu.content
             val <- tryXml . B64.decode $ TE.encodeUtf8 val64
             return $ UserMessageAttributeBinary c val
 
