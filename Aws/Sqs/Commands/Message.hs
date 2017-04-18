@@ -504,7 +504,7 @@ readUserMessageAttributeValue cursor = do
 
         ("Binary", c) -> do
             val64 <- force "Missing StringValue"
-                $ cursor $// Cu.laxElement "StringValue" &/ Cu.content
+                $ cursor $// Cu.laxElement "BinaryValue" &/ Cu.content
             val <- tryXml . B64.decode $ TE.encodeUtf8 val64
             return $ UserMessageAttributeBinary c val
 

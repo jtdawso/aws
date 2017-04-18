@@ -867,8 +867,8 @@ xmlCursorConsumer ::
     -> HTTPResponseConsumer a
 xmlCursorConsumer parse metadataRef res
     = do doc <- HTTP.responseBody res $$+- XML.sinkDoc XML.def
-         
-         let cursor = trace ("JDAWS: Here is the doc: " ++ show doc) Cu.fromDocument doc
+
+         let cursor = Cu.fromDocument doc
          let Response metadata x = parse cursor
          liftIO $ tellMetadataRef metadataRef metadata
          case x of
